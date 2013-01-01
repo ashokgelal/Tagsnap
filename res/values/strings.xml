@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tagsnap</string>
+    <string name="current">Current</string>
+    <string name="locations">Locations</string>
+    <string name="map">Map</string>
 </resources>
