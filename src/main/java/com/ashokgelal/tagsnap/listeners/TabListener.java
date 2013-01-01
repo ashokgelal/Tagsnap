@@ -17,12 +17,14 @@ public class TabListener implements ActionBar.TabListener {
         mActivity = activity;
         mTag = tag;
         mFragmentClass = fragmentClass;
+        // see if we already have the fragment with given tag. it's okay if it is null
         mFragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         if (mFragment == null) {
+            // instantiate a new fragment for the given class
             mFragment = SherlockFragment.instantiate(mActivity, mFragmentClass.getName());
             // place in the default root viewgroup - android.R.id.content
             ft.replace(android.R.id.content, mFragment, mTag);
