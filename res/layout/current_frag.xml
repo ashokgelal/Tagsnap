@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="50">
+
+        <ImageView
+            android:id="@+id/locationIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/unknown_location"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dip"/>
+
+        <TextView
+            android:id="@+id/address1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/locationIcon"
+            android:layout_alignTop="@+id/locationIcon"
+            android:layout_marginLeft="30dip"
+            android:textColor="#0099cc"
+            android:textSize="22sp"
+            android:layout_alignParentTop="false"
+            android:layout_marginTop="5dip"/>
+
+        <TextView
+            android:id="@+id/address2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#0099cc"
+            android:textSize="18sp"
+            android:layout_alignLeft="@+id/address1"
+            android:layout_below="@+id/address1"/>
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#dddddd"
+            android:textSize="14sp"
+            android:layout_alignLeft="@+id/address1"
+            android:layout_below="@+id/address2"/>
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#dddddd"
+            android:textSize="14sp"
+            android:layout_alignLeft="@+id/address1"
+            android:layout_below="@+id/latitude"/>
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/tagButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_weight="0"
+        android:src="@drawable/tag_button_disabled"
+        android:clickable="false"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
