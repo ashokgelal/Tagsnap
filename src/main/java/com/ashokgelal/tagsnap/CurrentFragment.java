@@ -49,7 +49,8 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
         // restore last known address
         if (savedInstanceState != null)
             mLastKnownAddress = savedInstanceState.getParcelable("last_known_address");
-        setAddressDetails(mLastKnownAddress);
+        if(mLastKnownAddress != null)
+            setAddressDetails(mLastKnownAddress);
     }
 
     @Override
