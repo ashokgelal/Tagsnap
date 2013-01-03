@@ -20,12 +20,16 @@ public class LocationService {
     private boolean mNetworkEnabled;
 
     public LocationService() {
+        // create a GPS location listener
         mGpsLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                // cancel the timer as we now have the current location
                 mTimer.cancel();
+                // stop from getting further updates
                 mLocationManager.removeUpdates(this);
                 mLocationManager.removeUpdates(mNetworkLocationListener);
+                // callback
                 mLocationResultListener.onLocationResultAvailable(location);
             }
 
@@ -42,12 +46,16 @@ public class LocationService {
             }
         };
 
+        // create a Network location listener
         mNetworkLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                // cancel the timer as we now have the current location
                 mTimer.cancel();
+                // stop from getting further updates
                 mLocationManager.removeUpdates(this);
                 mLocationManager.removeUpdates(mGpsLocationListener);
+                // callback
                 mLocationResultListener.onLocationResultAvailable(location);
             }
 
@@ -81,6 +89,7 @@ public class LocationService {
         } catch (Exception ex) {
         }
 
+        // if none are availabe, there is no way to get the location
         if (!mGpsEnabled && !mNetworkEnabled)
             return false;
 
@@ -90,6 +99,8 @@ public class LocationService {
         if (mNetworkEnabled)
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mNetworkLocationListener);
 
+        // set a timer that will fire in 20 seconds but only if we can't get the current location. Otherwise it will
+        // be cancelled
         mTimer = new Timer();
         mTimer.schedule(new LastLocationFetcher(), 20000);
         return true;
@@ -99,15 +110,18 @@ public class LocationService {
 
         @Override
         public void run() {
+            // the timer is fired; we waited enough; we no longer want the current location
             mLocationManager.removeUpdates(mGpsLocationListener);
             mLocationManager.removeUpdates(mNetworkLocationListener);
 
+            // get the last known location instead
             Location gpsLoc = null, netLoc = null;
             if (mGpsEnabled)
                 gpsLoc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (mNetworkEnabled)
                 netLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
+            // check the latest location if we have locations from both radios
             if (gpsLoc != null && netLoc != null) {
                 if (gpsLoc.getTime() > netLoc.getTime())
                     mLocationResultListener.onLocationResultAvailable(gpsLoc);
@@ -116,16 +130,19 @@ public class LocationService {
                 return;
             }
 
+            // if we have the location from only GPS, use it
             if (gpsLoc != null) {
                 mLocationResultListener.onLocationResultAvailable(gpsLoc);
                 return;
             }
 
+            // if we have the location from only Wi-Fi, use it
             if (netLoc != null) {
                 mLocationResultListener.onLocationResultAvailable(netLoc);
                 return;
             }
 
+            // last known location is not avaiable
             mLocationResultListener.onLocationResultAvailable(null);
         }
     }

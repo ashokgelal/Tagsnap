@@ -37,6 +37,7 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // tells that we have a menu item to add to the ActionBar
         setHasOptionsMenu(true);
         mLocationIcon = (ImageView) getView().findViewById(R.id.locationIcon);
         mTagButton = (ImageButton) getView().findViewById(R.id.tagButton);
@@ -44,6 +45,8 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
         mAddress2 = (TextView) getView().findViewById(R.id.address2);
         mLat = (TextView) getView().findViewById(R.id.latitude);
         mLon = (TextView) getView().findViewById(R.id.longitude);
+
+        // restore last known address
         if (savedInstanceState != null)
             mLastKnownAddress = savedInstanceState.getParcelable("last_known_address");
         setAddressDetails(mLastKnownAddress);
@@ -71,6 +74,7 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
         if (location == null) {
             // TODO: notify user
         } else {
+            // we have a location, reverse geocode it
             new ReverseGeocodingService(getActivity(), this).execute(location);
         }
     }
@@ -80,12 +84,14 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
         if (address == null) {
             // TODO: notify user
         } else {
+            // we have an address, save it and display the details
             mLastKnownAddress = address;
             setAddressDetails(address);
         }
     }
 
     private void setAddressDetails(Address address) {
+        // if we have the first address line
         if (address.getMaxAddressLineIndex() > 0)
             mAddress1.setText(address.getAddressLine(0));
 
@@ -96,12 +102,14 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
 
         mTagButton.setImageResource(R.drawable.tag_button);
         mLocationIcon.setImageResource(R.drawable.known_location);
+        // the tag button is now clickable because we have an address
         mTagButton.setClickable(true);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        // save the last known address before the config changes
         if(mLastKnownAddress != null)
             outState.putParcelable("last_known_address", mLastKnownAddress);
     }

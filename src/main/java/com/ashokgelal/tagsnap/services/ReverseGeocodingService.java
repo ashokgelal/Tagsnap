@@ -29,11 +29,13 @@ public class ReverseGeocodingService extends AsyncTask<Location, Void, Void> {
         Location loc = locations[0];
         List<Address> addresses = null;
         try {
+            // get all the addresses fro the given latitude, and longitude
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
         } catch (IOException e) {
             mAddress = null;
         }
 
+        // if we have at least one address, use it
         if (addresses != null && addresses.size() > 0) {
             mAddress = addresses.get(0);
         }
@@ -42,6 +44,7 @@ public class ReverseGeocodingService extends AsyncTask<Location, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        // set the address on the UI thread
         mListener.onAddressAvailable(mAddress);
     }
 }
