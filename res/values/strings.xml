@@ -4,4 +4,6 @@
     <string name="current">Current</string>
     <string name="locations">Locations</string>
     <string name="map">Map</string>
+    <string name="lat_val">Lat: %1$f </string>
+    <string name="lon_val">Lon: %1$f </string>
 </resources>
