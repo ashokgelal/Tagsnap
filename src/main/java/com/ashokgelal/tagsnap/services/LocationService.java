@@ -24,11 +24,7 @@ public class LocationService {
         mGpsLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // cancel the timer as we now have the current location
-                mTimer.cancel();
-                // stop from getting further updates
-                mLocationManager.removeUpdates(this);
-                mLocationManager.removeUpdates(mNetworkLocationListener);
+                stop();
                 // callback
                 mLocationResultListener.onLocationResultAvailable(location);
             }
@@ -47,30 +43,27 @@ public class LocationService {
         };
 
         // create a Network location listener
-        mNetworkLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                // cancel the timer as we now have the current location
-                mTimer.cancel();
-                // stop from getting further updates
-                mLocationManager.removeUpdates(this);
-                mLocationManager.removeUpdates(mGpsLocationListener);
-                // callback
-                mLocationResultListener.onLocationResultAvailable(location);
-            }
+        mNetworkLocationListener = new
+                LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        stop();
+                        // callback
+                        mLocationResultListener.onLocationResultAvailable(location);
+                    }
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-            }
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+                    }
 
-            @Override
-            public void onProviderEnabled(String s) {
-            }
+                    @Override
+                    public void onProviderEnabled(String s) {
+                    }
 
-            @Override
-            public void onProviderDisabled(String s) {
-            }
-        };
+                    @Override
+                    public void onProviderDisabled(String s) {
+                    }
+                };
     }
 
     public boolean getLocation(Context context, LocationResultListener locationListener) {
@@ -104,6 +97,14 @@ public class LocationService {
         mTimer = new Timer();
         mTimer.schedule(new LastLocationFetcher(), 20000);
         return true;
+    }
+
+    public void stop() {
+        if (mTimer != null)
+            mTimer.cancel();
+        // stop from getting further updates
+        mLocationManager.removeUpdates(mGpsLocationListener);
+        mLocationManager.removeUpdates(mNetworkLocationListener);
     }
 
     private class LastLocationFetcher extends TimerTask {

@@ -1,11 +1,13 @@
 package com.ashokgelal.tagsnap;
 
+import android.location.Address;
 import android.os.Bundle;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ashokgelal.tagsnap.listeners.AddressResultListener;
 import com.ashokgelal.tagsnap.listeners.TabListener;
 
-public class DefaultActivity extends SherlockFragmentActivity {
+public class DefaultActivity extends SherlockFragmentActivity implements AddressResultListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,5 +53,9 @@ public class DefaultActivity extends SherlockFragmentActivity {
         // Save tab index to restore it later after config changes
         int index = getSupportActionBar().getSelectedNavigationIndex();
         outState.putInt("selected_tab_index", index);
+    }
+
+    @Override
+    public void onAddressAvailable(Address address) {
     }
 }
