@@ -44,6 +44,7 @@ public class LocationService {
 
         // create a Network location listener
         mNetworkLocationListener = new
+
                 LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
