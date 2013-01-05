@@ -8,9 +8,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.ashokgelal.tagsnap.model.TagInfo;
 
 import java.io.File;
@@ -49,6 +53,7 @@ public class DetailsActivity extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details);
+        setupActionBar();
         setupDefaultValuesFromBundle();
         setupImageButtons();
         if (savedInstanceState != null) {
@@ -144,5 +149,44 @@ public class DetailsActivity extends SherlockActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("camera_output_path", mSelectedPictureUri);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getSupportMenuInflater().inflate(R.menu.discard, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.discard:
+                setResult(RESULT_CANCELED);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupActionBar() {
+        LayoutInflater inflater = (LayoutInflater) getSupportActionBar().getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View customActionBarView = inflater.inflate(R.layout.actionbar_custom_view_done, null);
+        customActionBarView.findViewById(R.id.actionbar_done).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent data = new Intent();
+                mCurrentTagsnap.setDescription(mDescriptionTextView.getText().toString());
+                mCurrentTagsnap.setCategory(mCategorySpinner.getSelectedItem().toString());
+                mCurrentTagsnap.setPictureUri(mSelectedPictureUri);
+                data.putExtra("taginfo", mCurrentTagsnap);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setCustomView(customActionBarView);
     }
 }

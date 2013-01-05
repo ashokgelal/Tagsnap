@@ -12,6 +12,9 @@
     <string name="location">Location</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
+    <string name="done">Done</string>
+    <string name="discard">Discard</string>
+    <string name="details">Details</string>
 
     <string-array name="categories_array">
         <item>Musuem</item>
