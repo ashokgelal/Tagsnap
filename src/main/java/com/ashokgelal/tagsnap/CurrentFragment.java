@@ -1,5 +1,6 @@
 package com.ashokgelal.tagsnap;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Location;
@@ -14,12 +15,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.ashokgelal.tagsnap.listeners.AddressResultListener;
 import com.ashokgelal.tagsnap.listeners.LocationResultListener;
-import com.ashokgelal.tagsnap.listeners.ReverseGeocodingListener;
 import com.ashokgelal.tagsnap.services.LocationService;
 import com.ashokgelal.tagsnap.services.ReverseGeocodingService;
 
-public class CurrentFragment extends SherlockFragment implements LocationResultListener, ReverseGeocodingListener {
+public class CurrentFragment extends SherlockFragment implements LocationResultListener, AddressResultListener, View.OnClickListener {
     private LocationService mLocationService;
     private ImageView mLocationIcon;
     private ImageButton mTagButton;
@@ -28,10 +29,21 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
     private TextView mLat;
     private TextView mLon;
     private Address mLastKnownAddress;
+    private AddressResultListener mAddressResultListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.current_frag, container, false);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mAddressResultListener = (AddressResultListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement AddressResultListener");
+        }
     }
 
     @Override
@@ -45,11 +57,11 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
         mAddress2 = (TextView) getView().findViewById(R.id.address2);
         mLat = (TextView) getView().findViewById(R.id.latitude);
         mLon = (TextView) getView().findViewById(R.id.longitude);
-
+        mTagButton.setOnClickListener(this);
         // restore last known address
         if (savedInstanceState != null)
             mLastKnownAddress = savedInstanceState.getParcelable("last_known_address");
-        if(mLastKnownAddress != null)
+        if (mLastKnownAddress != null)
             setAddressDetails(mLastKnownAddress);
     }
 
@@ -111,7 +123,20 @@ public class CurrentFragment extends SherlockFragment implements LocationResultL
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // save the last known address before the config changes
-        if(mLastKnownAddress != null)
+        if (mLastKnownAddress != null)
             outState.putParcelable("last_known_address", mLastKnownAddress);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mAddressResultListener != null && mLastKnownAddress != null)
+            mAddressResultListener.onAddressAvailable(mLastKnownAddress);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mLocationService != null)
+            mLocationService.stop();
     }
 }
