@@ -6,4 +6,17 @@
     <string name="map">Map</string>
     <string name="lat_val">Lat: %1$f </string>
     <string name="lon_val">Lon: %1$f </string>
+    <string name="category">Category</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+
+    <string-array name="categories_array">
+        <item>Musuem</item>
+        <item>Park</item>
+        <item>Theatre</item>
+        <item>Historial Landmark</item>
+    </string-array>
 </resources>
