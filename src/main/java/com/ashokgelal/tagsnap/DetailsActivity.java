@@ -71,12 +71,15 @@ public class DetailsActivity extends SherlockActivity {
 
         mDescriptionTextView.setText(mCurrentTagsnap.getDescription());
 
+
+        // set the default category, if we have any
         String cat = mCurrentTagsnap.getCategory();
         if (cat != null && !cat.equals("")) {
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) mCategorySpinner.getAdapter();
             mCategorySpinner.setSelection(adapter.getPosition(cat));
         }
 
+        // set the picture preview, if we have any
         Uri uri = mCurrentTagsnap.getPictureUri();
         if (uri != null) {
             File file = new File(uri.getPath());
@@ -93,6 +96,7 @@ public class DetailsActivity extends SherlockActivity {
     }
 
     private void setupImageButtons() {
+        // check, and enable camera button if we have camera
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             ImageButton cameraButton = (ImageButton) findViewById(R.id.cameraButton);
             cameraButton.setVisibility(View.VISIBLE);
@@ -132,11 +136,13 @@ public class DetailsActivity extends SherlockActivity {
             if (requestCode == CAMERA_REQUEST) {
                 mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
             } else if (requestCode == GALLERY_REQUEST) {
+                // get the uri to the selected file
                 Uri image = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(image, filePathColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+
                 String filePath = cursor.getString(columnIndex);
                 cursor.close();
                 mSelectedPictureUri = Uri.fromFile(new File(filePath));
@@ -162,6 +168,7 @@ public class DetailsActivity extends SherlockActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.discard:
+                // finish this activity with a CANCELLED status
                 setResult(RESULT_CANCELED);
                 finish();
                 return true;
@@ -175,6 +182,7 @@ public class DetailsActivity extends SherlockActivity {
         customActionBarView.findViewById(R.id.actionbar_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // put/update the details, put it to intent data, and finish this activity
                 Intent data = new Intent();
                 mCurrentTagsnap.setDescription(mDescriptionTextView.getText().toString());
                 mCurrentTagsnap.setCategory(mCategorySpinner.getSelectedItem().toString());
@@ -185,6 +193,7 @@ public class DetailsActivity extends SherlockActivity {
             }
         });
 
+        // set to display our custom action bar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setCustomView(customActionBarView);
