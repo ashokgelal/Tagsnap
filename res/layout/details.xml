@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dip"
+            android:hint="@string/description"/>
+
+        <TextView
+            android:id="@+id/categoryHeader"
+            style="@style/HeaderText"
+            android:text="@string/category"
+            android:layout_alignLeft="@+id/description"
+            android:layout_below="@+id/description"/>
+
+        <View
+            style="@style/HeaderTextSeparator"
+            android:layout_below="@+id/categoryHeader"
+            android:id="@+id/categorySeparator"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/category"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/categoryHeader"
+            android:entries="@array/categories_array"
+            android:layout_marginTop="4dip"
+            android:layout_marginLeft="4dip"
+            android:spinnerMode="dialog"
+            android:layout_marginRight="4dip"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/description"
+            android:layout_below="@+id/category"
+            android:layout_marginTop="10dip"
+            android:id="@+id/relativeLayout">
+
+            <ImageView
+                android:layout_width="170dip"
+                android:layout_height="128dip"
+                android:id="@+id/previewImage"
+                android:src="@drawable/photo_preview"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cameraButton"
+                android:src="@drawable/add_from_camera"
+                android:layout_toLeftOf="@+id/galleryButton"
+                android:layout_alignParentTop="false"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/galleryButton"
+                android:src="@drawable/add_from_gallery"
+                android:layout_alignParentTop="false"
+                android:baselineAlignBottom="false"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dip"/>
+        </RelativeLayout>
+
+        <TextView
+            style="@style/HeaderText"
+            android:id="@+id/locationHeader"
+            android:text="@string/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/relativeLayout"
+            android:layout_below="@+id/relativeLayout"/>
+
+        <View
+            style="@style/HeaderTextSeparator"
+            android:layout_below="@+id/locationHeader"
+            android:id="@+id/locationSeparator"/>
+
+        <TextView
+            android:id="@+id/addressHeader"
+            style="@style/LocationHeaderText"
+            android:text="@string/address"
+            android:layout_alignLeft="@+id/locationHeader"
+            android:layout_below="@+id/locationHeader"/>
+
+        <TextView
+            android:id="@+id/detailsAddress1"
+            style="@style/LocationDetailsText"
+            android:layout_below="@+id/addressHeader"
+            android:layout_alignLeft="@+id/addressHeader"/>
+
+        <TextView
+            android:id="@+id/detailsAddress2"
+            style="@style/LocationDetailsText"
+            android:layout_alignLeft="@+id/categoryHeader"
+            android:layout_below="@+id/detailsAddress1"/>
+
+        <View
+            style="@style/LocationTextSeparator"
+            android:layout_below="@+id/detailsAddress2"
+            android:id="@+id/addressSeparator"/>
+
+        <TextView
+            style="@style/LocationHeaderText"
+            android:id="@+id/latitudeHeader"
+            android:text="@string/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/addressHeader"
+            android:layout_below="@+id/addressSeparator"/>
+
+        <TextView
+            style="@style/LocationDetailsText"
+            android:id="@+id/detailsLatitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/addressHeader"
+            android:layout_below="@+id/latitudeHeader"/>
+
+        <View
+            style="@style/LocationTextSeparator"
+            android:layout_below="@+id/detailsLatitude"
+            android:id="@+id/latitudeSeparator"/>
+
+        <TextView
+            style="@style/LocationHeaderText"
+            android:id="@+id/longitudeHeader"
+            android:text="@string/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/addressHeader"
+            android:layout_below="@+id/latitudeSeparator"/>
+
+        <TextView
+            style="@style/LocationDetailsText"
+            android:id="@+id/detailsLongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/addressHeader"
+            android:layout_below="@+id/longitudeHeader"/>
+
+        <View
+            style="@style/LocationTextSeparator"
+            android:layout_below="@+id/detailsLongitude"
+            android:id="@+id/longitudeSeparator"/>
+
+    </RelativeLayout>
+</ScrollView>

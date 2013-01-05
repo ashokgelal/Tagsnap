@@ -1,11 +1,17 @@
 package com.ashokgelal.tagsnap;
 
+import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ashokgelal.tagsnap.listeners.AddressResultListener;
 import com.ashokgelal.tagsnap.listeners.TabListener;
+import com.ashokgelal.tagsnap.model.TagInfo;
 
-public class DefaultActivity extends SherlockFragmentActivity {
+public class DefaultActivity extends SherlockFragmentActivity implements AddressResultListener {
+    private static final int ADD_DETAILS_REQUEST = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,5 +57,19 @@ public class DefaultActivity extends SherlockFragmentActivity {
         // Save tab index to restore it later after config changes
         int index = getSupportActionBar().getSelectedNavigationIndex();
         outState.putInt("selected_tab_index", index);
+    }
+
+    @Override
+    public void onAddressAvailable(Address address) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        TagInfo tagsnap = new TagInfo();
+        if (address.getMaxAddressLineIndex() > 0)
+            tagsnap.setAddress1(address.getAddressLine(0));
+
+        tagsnap.setAddress2(String.format("%s, %s, %s", address.getLocality(), address.getAdminArea(), address.getCountryName()));
+        tagsnap.setLatitude(address.getLatitude());
+        tagsnap.setLongitude(address.getLongitude());
+        intent.putExtra("taginfo", tagsnap);
+        startActivityForResult(intent, ADD_DETAILS_REQUEST);
     }
 }
