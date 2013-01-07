@@ -7,9 +7,12 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ashokgelal.tagsnap.listeners.AddressResultListener;
 import com.ashokgelal.tagsnap.listeners.TabListener;
+import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskListener;
 import com.ashokgelal.tagsnap.model.TagInfo;
+import com.ashokgelal.tagsnap.model.TagInfoAsyncTaskType;
+import com.ashokgelal.tagsnap.services.DatabaseHelper;
 
-public class DefaultActivity extends SherlockFragmentActivity implements AddressResultListener {
+public class DefaultActivity extends SherlockFragmentActivity implements AddressResultListener, TagInfoAsyncTaskListener {
     private static final int ADD_DETAILS_REQUEST = 0;
 
     @Override
@@ -71,5 +74,23 @@ public class DefaultActivity extends SherlockFragmentActivity implements Address
         tagsnap.setLongitude(address.getLongitude());
         intent.putExtra("taginfo", tagsnap);
         startActivityForResult(intent, ADD_DETAILS_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_DETAILS_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                TagInfo tagsnap = data.getParcelableExtra("taginfo");
+                DatabaseHelper db = DatabaseHelper.getInstance(this);
+                db.addNewTagInfoAsync(tagsnap, this);
+            }
+        }
+    }
+
+    @Override
+    public void onAsyncTaskCompleted(TagInfo taginfo, TagInfoAsyncTaskType type) {
+        DatabaseHelper db = DatabaseHelper.getInstance(this);
+        db.close();
     }
 }
