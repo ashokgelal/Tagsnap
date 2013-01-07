@@ -3,6 +3,7 @@ package com.ashokgelal.tagsnap;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ashokgelal.tagsnap.listeners.AddressResultListener;
@@ -92,5 +93,6 @@ public class DefaultActivity extends SherlockFragmentActivity implements Address
     public void onAsyncTaskCompleted(TagInfo taginfo, TagInfoAsyncTaskType type) {
         DatabaseHelper db = DatabaseHelper.getInstance(this);
         db.close();
+        Toast.makeText(this, "Successfully added new TagInfo object to the database", Toast.LENGTH_LONG).show();
     }
 }
