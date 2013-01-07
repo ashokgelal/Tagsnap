@@ -58,7 +58,8 @@ public class DetailsActivity extends SherlockActivity {
         setupImageButtons();
         if (savedInstanceState != null) {
             mSelectedPictureUri = savedInstanceState.getParcelable("camera_output_path");
-            mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
+            if(mSelectedPictureUri != null)
+                mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
         }
     }
 
