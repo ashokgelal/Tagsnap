@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.ashokgelal.tagsnap.R;
 import com.ashokgelal.tagsnap.services.DatabaseHelper;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,11 +23,14 @@ import java.util.List;
 public class TagInfoAdapter extends CursorAdapter implements StickyListHeadersAdapter {
     private final LayoutInflater mInflater;
     private final List<String> mCategories;
+    private final ImageLoader mImageLoader;
 
     public TagInfoAdapter(Context context, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mCategories = Arrays.asList(context.getResources().getStringArray(R.array.categories_array));
+        mImageLoader = ImageLoader.getInstance();
+        mImageLoader.init(ImageLoaderConfiguration.createDefault(context));
     }
 
     @Override
@@ -48,9 +53,9 @@ public class TagInfoAdapter extends CursorAdapter implements StickyListHeadersAd
         address2.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.ADDRESS2)));
 
         String picturePath = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PICTURE_URI));
-        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(picturePath), 100, 100);
         ImageView imageView = (ImageView)view.findViewById(R.id.locationImage);
-        imageView.setImageBitmap(thumbnail);
+        mImageLoader.displayImage(String.format("file://%s", picturePath), imageView);
+
     }
 
     @Override
