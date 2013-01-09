@@ -1,0 +1,3 @@
+[submodule "libs/StickyListHeaders"]
+	path = libs/StickyListHeaders
+	url = git@github.com:ashokgelal/StickyListHeaders.git
