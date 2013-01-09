@@ -2,9 +2,11 @@ package com.ashokgelal.tagsnap.services;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskCursorListener;
 import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskListener;
 import com.ashokgelal.tagsnap.model.TagInfo;
 import com.ashokgelal.tagsnap.model.TagInfoAsyncTaskType;
@@ -55,7 +57,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         TaskHelper.executeAsyncTask(new CreateTagInfoTask(tagInfo, listener));
     }
 
-    public void addNewTagInfoAsync() {
+    public void loadCursorAsync(TagInfoAsyncTaskCursorListener listener) {
+        TaskHelper.executeAsyncTask(new LoadCursorTask(listener));
     }
 
     private class CreateTagInfoTask extends AsyncTask<Void, Void, Void> {
@@ -87,6 +90,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         protected void onPostExecute(Void aVoid) {
             if (mListener != null)
                 mListener.onAsyncTaskCompleted(mTagInfo, TagInfoAsyncTaskType.CREATE.CREATE);
+        }
+    }
+
+    private class LoadCursorTask extends AsyncTask<Void, Void, Void> {
+        private Cursor cursor;
+        private TagInfoAsyncTaskCursorListener mListener;
+
+        private LoadCursorTask(TagInfoAsyncTaskCursorListener listener) {
+            mListener = listener;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            cursor = getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, CATEGORY);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mListener.onCursorAvailable(cursor);
         }
     }
 }
