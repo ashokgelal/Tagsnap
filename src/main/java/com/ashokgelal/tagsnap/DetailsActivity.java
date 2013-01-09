@@ -3,7 +3,6 @@ package com.ashokgelal.tagsnap;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +15,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ashokgelal.tagsnap.model.TagInfo;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ public class DetailsActivity extends SherlockActivity {
     private ImageView mPreviewImage;
     private TagInfo mCurrentTagsnap;
     private Uri mSelectedPictureUri;
+    private ImageLoader mImageLoader;
 
     private static Uri getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -52,6 +54,8 @@ public class DetailsActivity extends SherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImageLoader = ImageLoader.getInstance();
+        mImageLoader.init(ImageLoaderConfiguration.createDefault(this));
         setContentView(R.layout.details);
         setupActionBar();
         setupDefaultValuesFromBundle();
@@ -59,7 +63,7 @@ public class DetailsActivity extends SherlockActivity {
         if (savedInstanceState != null) {
             mSelectedPictureUri = savedInstanceState.getParcelable("camera_output_path");
             if(mSelectedPictureUri != null)
-                mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
+                mImageLoader.displayImage(String.format("file://%s", mSelectedPictureUri.getPath()), mPreviewImage);
         }
     }
 
@@ -86,7 +90,7 @@ public class DetailsActivity extends SherlockActivity {
             File file = new File(uri.getPath());
             if (file.exists()) {
                 mSelectedPictureUri = uri;
-                mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
+                mImageLoader.displayImage(String.format("file://%s", mSelectedPictureUri.getPath()), mPreviewImage);
             }
         }
 
@@ -135,7 +139,7 @@ public class DetailsActivity extends SherlockActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
-                mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
+                mImageLoader.displayImage(String.format("file://%s", mSelectedPictureUri.getPath()), mPreviewImage);
             } else if (requestCode == GALLERY_REQUEST) {
                 // get the uri to the selected file
                 Uri image = data.getData();
@@ -147,7 +151,7 @@ public class DetailsActivity extends SherlockActivity {
                 String filePath = cursor.getString(columnIndex);
                 cursor.close();
                 mSelectedPictureUri = Uri.fromFile(new File(filePath));
-                mPreviewImage.setImageBitmap(BitmapFactory.decodeFile(mSelectedPictureUri.getPath()));
+                mImageLoader.displayImage(String.format("file://%s", mSelectedPictureUri.getPath()), mPreviewImage);
             }
         }
     }
