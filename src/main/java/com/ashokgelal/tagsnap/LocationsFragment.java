@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.ashokgelal.tagsnap.listeners.LocationItemLongClickListener;
 import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskCursorListener;
 import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskListener;
 import com.ashokgelal.tagsnap.model.TagInfo;
@@ -38,6 +40,8 @@ public class LocationsFragment extends SherlockListFragment implements TagInfoAs
         if (mAdapter == null) {
             mAdapter = new TagInfoAdapter(getActivity(), cursor, false);
             setListAdapter(mAdapter);
+            getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            getListView().setOnItemLongClickListener(new LocationItemLongClickListener(this));
         } else
             mAdapter.changeCursor(cursor);
     }
@@ -70,5 +74,11 @@ public class LocationsFragment extends SherlockListFragment implements TagInfoAs
                 db.updateTagInfoAsync(tagInfo, this);
             }
         }
+    }
+
+    public void handleDelete() {
+        Cursor cursor = (Cursor) getListAdapter().getItem(getListView().getCheckedItemPosition());
+        long tagId = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ID));
+        DatabaseHelper.getInstance(getActivity()).deleteTagInfoAsync(tagId, this);
     }
 }
