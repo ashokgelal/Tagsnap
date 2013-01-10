@@ -92,6 +92,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         TaskHelper.executeAsyncTask(new UpdateTagInfoTask(tagInfo, listener));
     }
 
+    public void updateTagInfoAsync(TagInfo tagInfo, final TagInfoAsyncListListener listener) {
+        TaskHelper.executeAsyncTask(new UpdateTagInfoTask(tagInfo, new TagInfoAsyncTaskCursorListener() {
+            @Override
+            public void onCursorAvailable(Cursor cursor) {
+                List<TagInfo> tagInfoList = createTagInfoListFromCurrentCursor(cursor);
+                cursor.close();
+                listener.onTagInfoListAvailable(tagInfoList);
+            }
+        }));
+    }
+
     public void deleteTagInfoAsync(long id, TagInfoAsyncTaskCursorListener listener) {
         TaskHelper.executeAsyncTask(new DeleteTagInfoTask(listener), id);
     }
