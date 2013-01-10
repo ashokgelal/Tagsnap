@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.AsyncTask;
+import com.ashokgelal.tagsnap.listeners.TagInfoAsyncListListener;
 import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskCursorListener;
 import com.ashokgelal.tagsnap.listeners.TagInfoAsyncTaskListener;
 import com.ashokgelal.tagsnap.model.TagInfo;
 import com.ashokgelal.tagsnap.model.TagInfoAsyncTaskType;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -95,6 +98,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void loadCursorAsync(TagInfoAsyncTaskCursorListener listener) {
         TaskHelper.executeAsyncTask(new LoadCursorTask(listener));
+    }
+
+    public void fetchTagInfoListAsync(final TagInfoAsyncListListener listener) {
+        loadCursorAsync(new TagInfoAsyncTaskCursorListener() {
+            @Override
+            public void onCursorAvailable(Cursor cursor) {
+                List<TagInfo> list = createTagInfoListFromCurrentCursor(cursor);
+                cursor.close();
+                listener.onTagInfoListAvailable(list);
+            }
+        });
+    }
+
+    private List<TagInfo> createTagInfoListFromCurrentCursor(Cursor cursor) {
+        List<TagInfo> tagInfoList = new LinkedList<TagInfo>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            tagInfoList.add(createTagInfoFromCurrentCursorPosition(cursor));
+            cursor.moveToNext();
+        }
+        return tagInfoList;
     }
 
     private class CreateTagInfoTask extends AsyncTask<Void, Void, Void> {
