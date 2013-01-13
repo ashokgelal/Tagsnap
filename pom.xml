@@ -6,9 +6,16 @@
 
     <groupId>com.ashokgelal.tagsnap</groupId>
     <artifactId>Tagsnap</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
+    <packaging>apk</packaging>
 
     <dependencies>
+        <dependency>
+          <groupId>android.support</groupId>
+          <artifactId>compatibility-v4</artifactId>
+          <version>11</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.android.gms</groupId>
             <artifactId>google-play-services</artifactId>
@@ -21,17 +28,10 @@
             <version>4</version>
             <type>jar</type>
         </dependency>
-
-        <dependency>
-            <groupId>com.actionbarsherlock</groupId>
-            <artifactId>library</artifactId>
-            <version>4.2.0</version>
-        </dependency>
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
-
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <!-- See http://code.google.com/p/maven-android-plugin/ -->
@@ -40,11 +40,12 @@
                 <version>3.4.1</version>
                 <configuration>
                     <sdk>
-                        <platform>8</platform>
+                        <platform>16</platform>
                     </sdk>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
+
 </project>
