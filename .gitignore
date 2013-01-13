@@ -19,3 +19,5 @@ local.properties
 .classpath
 .project
 699apps-release.keystore
+target/
+proguard_logs/
